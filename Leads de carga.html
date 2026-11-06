@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leads de carga</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#EEF1F2;--panel:#fff;--ink:#15232E;--mute:#5B6B77;--line:#D5DCE0;--pri:#1F6F78;--pri-ink:#fff;--ok:#2E7D4F;--warn:#B7791F;--bad:#B3402F;--sel:#E3F0F1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F171D;--panel:#17232B;--ink:#E6EDF1;--mute:#93A4B0;--line:#2A3A45;--pri:#4FB0B9;--pri-ink:#07252A;--ok:#5DBB85;--warn:#E0B055;--bad:#E27C6B;--sel:#1C3139}}
+:root[data-theme="dark"]{--bg:#0F171D;--panel:#17232B;--ink:#E6EDF1;--mute:#93A4B0;--line:#2A3A45;--pri:#4FB0B9;--pri-ink:#07252A;--ok:#5DBB85;--warn:#E0B055;--bad:#E27C6B;--sel:#1C3139}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 Archivo,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+.wrap{max-width:1280px;margin:0 auto;padding:16px}
+h1{font-size:26px;margin:0;letter-spacing:-.01em}
+.sub{margin:2px 0 14px;color:var(--mute)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.bar input{flex:1 1 220px;min-width:0}
+input,select,textarea{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:9px 10px;width:100%}
+button{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:9px 14px;cursor:pointer;font-weight:600}
+button:hover{border-color:var(--pri)}
+button.pri{background:var(--pri);color:var(--pri-ink);border-color:var(--pri)}
+button.bad{color:var(--bad)}
+.row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{padding:6px 12px;border-radius:99px;font-weight:400;font-size:14px}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel);margin-bottom:14px}
+.seg button{flex:1;border:0;border-radius:0;border-right:1px solid var(--line);padding:8px 4px;font-weight:400;font-size:14px}
+.seg button:last-child{border:0}
+.seg button.on{background:var(--pri);color:var(--pri-ink);font-weight:700}
+.seg b{display:block;font-size:20px;line-height:1.1}
+main{display:grid;gap:14px;grid-template-columns:1fr}
+#list{display:flex;flex-direction:column;gap:8px}
+.card{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:6px;padding:10px 12px;cursor:pointer;text-align:left;width:100%;font-weight:400}
+.card.on{background:var(--sel);border-color:var(--pri);border-left-color:var(--c)}
+.card strong{display:block;font-size:16px}
+.card small{color:var(--mute);display:block}
+.st{display:inline-block;margin-top:4px;font-size:13px;font-weight:600}
+.st.Viable,.st.Comunicado{color:var(--ok)}.st.Descartado,.st.Nocontesto{color:var(--bad)}.st.Sinllamar{color:var(--warn)}
+aside{display:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px}
+body.open aside{display:block;position:fixed;inset:0;z-index:5;overflow:auto;border-radius:0;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.back{margin-bottom:10px}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px}
+.acts a{padding:9px 14px;border:1px solid var(--line);border-radius:6px;color:var(--pri);font-weight:600;text-decoration:none}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid .w{grid-column:1/-1}
+label{display:block;font-size:13px;color:var(--mute)}
+label>*{margin-top:3px;color:var(--ink)}
+fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 14px;padding:12px}
+legend{font-weight:700;padding:0 6px}
+.empty{color:var(--mute);margin:20px 0}
+#mode{display:none;background:var(--sel);border:1px solid var(--warn);border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:14px}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:6px;display:none;z-index:9}
+@media(min-width:900px){main{grid-template-columns:400px 1fr;align-items:start}aside,body.open aside{display:block;position:sticky;inset:auto;top:12px;max-height:calc(100vh - 24px);overflow:auto;border-radius:8px;padding:16px;z-index:0}.back{display:none}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Leads de carga</h1>
+<p class="sub">Reliable Freight Brokerage &amp; Global Forwarding · EE. UU. y Canadá</p>
+<div id="mode">Modo local: tus leads solo se guardan en este navegador.</div>
+<div class="bar"><input id="q" type="search" placeholder="Buscar empresa, ciudad, contacto o teléfono"><button id="add" class="pri">Nuevo lead</button><button id="exp">Exportar CSV</button></div>
+<div class="row" id="nch"></div>
+<div class="seg" id="seg"></div>
+<main><section id="list"></section><aside id="detail"></aside></main>
+</div>
+<div id="toast"></div>
+<script>
+const NICHOS=["Alimentos","Maquinaria","Metales","Drayage (importadores)"];
+const NC={"Alimentos":"#D9A441","Maquinaria":"#5C8A3C","Metales":"#4B7BB5","Drayage (importadores)":"#C4673F"};
+const SEG=[["all","Todos"],["sin","Sin llamar"],["com","Comunicados"],["via","Viables"]];
+const YN=["","Sí","No"];
+const F=[
+["empresa","Empresa"],["nicho","Nicho","sel",NICHOS],["ciudad","Ciudad / Estado"],["telefono","Teléfono"],
+["contacto","Nombre del contacto"],["puesto","Puesto"],["correo","Correo","email"],["web","Sitio web","url"],
+["mercancia","Tipo de mercancía","text","w"],["resumen","Mini resumen","ta"],
+["transporte","Estado de transportista / 3PL","ta"],["evidencia","Evidencia pública revisada","ta"],
+["pregunta","Pregunta para validar si tienen proveedor","ta"],["fuente","Fuente del dato","ta"]];
+const CALL=[["fecha","Fecha de llamada","date"],["comunico","¿Se logró comunicar?","sel",YN],["viable","¿Viable?","sel",["Pendiente","Sí","No"]],["notas","Notas de la llamada","ta"]];
+let leads=[],sel=null,nf="Todos",sf="all",q="",col=null,delArm=null;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+function toast(t){const e=$("#toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",3000)}
+const LS="leads_v1";
+function lsSave(){try{localStorage.setItem(LS,JSON.stringify(leads))}catch(e){}}
+function persist(l){if(col)col.doc(l.id).set(l).catch(()=>toast("No se pudo guardar. Revisa tu conexión."));else lsSave()}
+const timers={};
+function persistSoon(l){clearTimeout(timers[l.id]);timers[l.id]=setTimeout(()=>persist(l),500)}
+function estado(l){if(l.viable==="Sí")return"Viable";if(l.viable==="No")return"Descartado";if(l.comunico==="Sí")return"Comunicado";if(l.comunico==="No")return"No contestó";return"Sin llamar"}
+function pass(l){
+ if(nf!=="Todos"&&l.nicho!==nf)return false;
+ if(sf==="sin"&&estado(l)!=="Sin llamar")return false;
+ if(sf==="com"&&l.comunico!=="Sí")return false;
+ if(sf==="via"&&l.viable!=="Sí")return false;
+ if(q){const t=[l.empresa,l.ciudad,l.contacto,l.telefono,l.mercancia,l.puesto].join(" ").toLowerCase();if(!t.includes(q))return false}
+ return true}
+function renderBar(){
+ $("#nch").innerHTML=["Todos"].concat(NICHOS).map(n=>`<button class="chip${n===nf?" on":""}" data-n="${esc(n)}">${esc(n)}</button>`).join("");
+ const base=leads.filter(l=>nf==="Todos"||l.nicho===nf);
+ const cnt={all:base.length,sin:base.filter(l=>estado(l)==="Sin llamar").length,com:base.filter(l=>l.comunico==="Sí").length,via:base.filter(l=>l.viable==="Sí").length};
+ $("#seg").innerHTML=SEG.map(s=>`<button data-s="${s[0]}" class="${s[0]===sf?"on":""}"><b>${cnt[s[0]]}</b>${s[1]}</button>`).join("")}
+function renderList(){
+ renderBar();
+ const items=leads.filter(pass).sort((a,b)=>NICHOS.indexOf(a.nicho)-NICHOS.indexOf(b.nicho)||String(a.empresa).localeCompare(String(b.empresa)));
+ $("#list").innerHTML=items.length?items.map(l=>{const e=estado(l);return `<button class="card${l.id===sel?" on":""}" data-id="${l.id}" style="--c:${NC[l.nicho]||"#888"}"><strong>${esc(l.empresa)||"Sin nombre"}</strong><small>${esc(l.ciudad)}${l.telefono?" · "+esc(l.telefono.split(/[;(/]/)[0].trim()):""}</small><span class="st ${e.replace(/\W|ó/g,m=>m==="ó"?"o":"")}">${e}</span></button>`}).join(""):`<p class="empty">${leads.length?"Ningún lead coincide con el filtro.":"Aún no hay leads. Usa “Nuevo lead” para agregar el primero."}</p>`}
+function fld(l,[k,lab,t,o]){
+ const v=l[k]||"";
+ if(t==="sel")return `<label>${lab}<select data-k="${k}">${o.map(x=>`<option${x===v?" selected":""}>${x}</option>`).join("")}</select></label>`;
+ if(t==="ta")return `<label class="w">${lab}<textarea data-k="${k}" rows="3">${esc(v)}</textarea></label>`;
+ return `<label${o==="w"?' class="w"':""}>${lab}<input data-k="${k}" type="${["email","url","date"].includes(t)?t:"text"}" value="${esc(v)}"></label>`}
+function renderDetail(){
+ const l=leads.find(x=>x.id===sel),el=$("#detail");
+ if(!l){document.body.classList.remove("open");el.innerHTML=`<p class="empty">Elige un lead de la lista o agrega uno nuevo.</p>`;return}
+ document.body.classList.add("open");
+ const tel=(String(l.telefono).match(/[+\d][\d\s().-]{8,}\d/)||[])[0];
+ const web=/^https?:\/\//.test(l.web)?l.web.split(" ")[0]:"";
+ el.innerHTML=`<button class="back" data-a="back">Volver a la lista</button><h2 style="margin:0">${esc(l.empresa)||"Sin nombre"}</h2>
+ <div class="acts">${tel?`<a href="tel:${esc(tel.replace(/[^\d+]/g,""))}">Llamar</a>`:""}${l.correo&&l.correo.includes("@")?`<a href="mailto:${esc(l.correo.trim())}">Enviar correo</a>`:""}${web?`<a href="${esc(web)}" target="_blank" rel="noopener">Abrir sitio web</a>`:""}<button data-a="today">Registrar llamada hoy</button><button class="bad" data-a="del">${delArm===l.id?"Confirmar: eliminar lead":"Eliminar"}</button></div>
+ <fieldset><legend>Seguimiento</legend><div class="grid">${CALL.map(f=>fld(l,f.length<4&&f[2]==="ta"?[f[0],f[1],"ta"]:f)).join("")}</div></fieldset>
+ <fieldset><legend>Datos del lead</legend><div class="grid">${F.map(f=>fld(l,f)).join("")}</div></fieldset>`}
+function render(){renderList();renderDetail()}
+function select(id){sel=id;delArm=null;renderList();renderDetail();if(!matchMedia("(min-width:900px)").matches)scrollTo(0,0)}
+document.addEventListener("click",e=>{
+ const c=e.target.closest("[data-id]");if(c)return select(c.dataset.id);
+ const n=e.target.closest("[data-n]");if(n){nf=n.dataset.n;return renderList()}
+ const s=e.target.closest("[data-s]");if(s){sf=s.dataset.s;return renderList()}
+ const a=e.target.closest("[data-a]");if(!a)return;
+ const l=leads.find(x=>x.id===sel);
+ if(a.dataset.a==="back"){sel=null;renderList();renderDetail()}
+ if(a.dataset.a==="today"&&l){l.fecha=today();persist(l);renderDetail();renderList();toast("Llamada registrada: "+l.fecha)}
+ if(a.dataset.a==="del"&&l){if(delArm!==l.id){delArm=l.id;renderDetail();return}
+  leads=leads.filter(x=>x.id!==l.id);if(col)col.doc(l.id).delete().catch(()=>toast("No se pudo eliminar."));else lsSave();sel=null;delArm=null;render();toast("Lead eliminado")}
+});
+$("#detail").addEventListener("input",e=>{
+ const k=e.target.dataset.k,l=leads.find(x=>x.id===sel);if(!k||!l)return;
+ l[k]=e.target.value;persistSoon(l);renderList();
+ if(k==="empresa"){const h=$("#detail h2");if(h)h.textContent=l.empresa||"Sin nombre"}});
+$("#q").addEventListener("input",e=>{q=e.target.value.trim().toLowerCase();renderList()});
+$("#add").addEventListener("click",()=>{
+ const l={id:"l"+Date.now().toString(36),nicho:nf!=="Todos"?nf:NICHOS[0],empresa:"",ciudad:"",telefono:"",contacto:"",puesto:"",correo:"",resumen:"",web:"",mercancia:"",fecha:"",comunico:"",viable:"Pendiente",fuente:"",transporte:"",evidencia:"",pregunta:"",notas:"",creado:Date.now()};
+ leads.push(l);persist(l);sf="all";q="";$("#q").value="";select(l.id);const i=$("#detail [data-k=empresa]");if(i)i.focus()});
+$("#exp").addEventListener("click",async()=>{
+ const keys=F.concat(CALL);
+ const rows=[keys.map(k=>k[1])].concat(leads.map(l=>keys.map(k=>l[k[0]]||"")));
+ const csv="\ufeff"+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(",")).join("\r\n");
+ try{const d=window.claude&&await window.claude.use("downloads");if(!d)return toast("La descarga no está disponible aquí.");await d.save({filename:"leads-carga.csv",data:csv});toast("Archivo listo")}catch(e){if(!e||e.code!=="declined")toast("No se pudo exportar.")}});
+function local(){col=null;try{leads=JSON.parse(localStorage.getItem(LS)||"[]")}catch(e){leads=[]}$("#mode").style.display="block";render()}
+(async function init(){
+ render();
+ let db=null;
+ try{db=window.claude?await window.claude.use("db"):null}catch(e){}
+ if(!db)return local();
+ col=db.collection("leads");
+ col.onSnapshot(s=>{
+  const ae=document.activeElement;
+  leads=s.docs.map(d=>Object.assign({},d.data(),{id:d.id}));
+  renderList();
+  if(!(ae&&ae.closest&&ae.closest("#detail")))renderDetail();
+ },()=>local());
+})();
+</script>
+</body>
+</html>
